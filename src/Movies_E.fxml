@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Movies_EContoller">
+   <top>
+      <HBox alignment="CENTER" prefHeight="104.0" prefWidth="600.0" spacing="60.0" BorderPane.alignment="CENTER">
+         <children>
+            <Hyperlink fx:id="ReturnLink" alignment="CENTER" text="Return" />
+            <Hyperlink fx:id="ViewLink" alignment="CENTER" text="View All Tab" />
+            <Hyperlink fx:id="CreateLink" alignment="CENTER" text="Create Tab" />
+         </children>
+         <padding>
+            <Insets left="10.0" right="10.0" />
+         </padding></HBox>
+   </top>
+   <center>
+      <FlowPane alignment="TOP_CENTER" orientation="VERTICAL" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="270.0">
+               <children>
+                  <Label text="Movie ID" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="IdField" editable="false" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="270.0">
+               <children>
+                  <Label text="Title" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="TitleField" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="270.0">
+               <children>
+                  <Label text="Main Language" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="LanguageField" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="270.0">
+               <children>
+                  <Label text="Duration" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="DurationField" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="270.0">
+               <children>
+                  <Label text="Now Showing" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <RadioButton fx:id="YesRadio" mnemonicParsing="false" text="Yes" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <RadioButton fx:id="NoRadio" mnemonicParsing="false" text="No" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="270.0">
+               <children>
+                  <Label text="Censorship" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="CensorList" prefWidth="150.0" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="270.0">
+               <children>
+                  <Label text="Rating" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="RatingField" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="270.0">
+               <children>
+                  <Label text="Lead Actor" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="LeadField" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="270.0">
+               <children>
+                  <Label text="Director" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="DirectorField" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="270.0">
+               <children>
+                  <Label text="Release Date" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <DatePicker fx:id="ReleaseDatePicker" prefHeight="25.0" prefWidth="150.0" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="89.0" prefWidth="270.0">
+               <children>
+                  <Label text="Description" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <TextArea fx:id="DescriptionField" prefHeight="50.0" prefWidth="150.0" wrapText="true" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="89.0" prefWidth="270.0">
+               <children>
+                  <Label text="Genre" />
+                  <Region prefHeight="50.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <ListView fx:id="GenreList" prefHeight="89.0" prefWidth="151.0" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+               <FlowPane.margin>
+                  <Insets top="10.0" />
+               </FlowPane.margin>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="270.0" spacing="11.0">
+               <children>
+                  <Label text="Add Genre" />
+                  <TextField fx:id="GenreField" prefHeight="25.0" prefWidth="110.0" />
+                  <Button fx:id="AddButton" mnemonicParsing="false" text="Add" />
+               </children>
+               <padding>
+                  <Insets left="20.0" right="5.0" />
+               </padding>
+            </HBox>
+         </children>
+      </FlowPane>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER" prefHeight="88.0" prefWidth="600.0" spacing="50.0" BorderPane.alignment="CENTER_LEFT">
+         <children>
+            <Button fx:id="SubmitButton" alignment="CENTER" mnemonicParsing="false" onAction="#submitForm" text="Submit" />
+            <Button fx:id="RestoreButton" alignment="CENTER" mnemonicParsing="false" onAction="#restoreForm" text="Restore" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </HBox>
+   </bottom>
+</BorderPane>

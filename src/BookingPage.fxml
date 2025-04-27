@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<?import java.net.URL?>
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookingController">
+   <stylesheets>
+    <URL value="@dark-theme.css"/>
+   </stylesheets>
+
+    <top>
+        <VBox styleClass="header-box">
+            <HBox alignment="CENTER" spacing="20" styleClass="header-content">
+                <ImageView fitHeight="50" fitWidth="50">
+                    <image>
+                    </image>
+                </ImageView>
+                <Text text="CineBook - Booking" styleClass="title-text"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Back to Movies" onAction="#goBackToHome" styleClass="back-button"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+            <VBox fx:id="bookingContainer" spacing="20" styleClass="booking-container">
+                <!-- Movie Details Section -->
+                <VBox fx:id="movieDetailsBox" styleClass="movie-details-box" spacing="10"/>
+
+                <!-- Date Selection -->
+                <HBox spacing="10" styleClass="selection-box">
+                    <Label text="Select Date:" styleClass="selection-label"/>
+                    <DatePicker fx:id="datePicker" styleClass="date-picker"/>
+                </HBox>
+
+                <!-- Time Selection (updated) -->
+                <HBox spacing="10" styleClass="selection-box">
+                    <Label text="Select Time:" styleClass="selection-label"/>
+                    <ComboBox fx:id="showTimeCombo" styleClass="selection-combo" promptText="Choose a time" disable="true"/>
+                </HBox>
+
+                <!-- Seat Selection -->
+                <VBox spacing="10" styleClass="selection-box">
+                    <Label text="Select Seats:" styleClass="selection-label"/>
+                    <Label text="Available seats are shown in green. Selected seats turn blue. Booked seats are red." styleClass="hint-text"/>
+                    <ScrollPane fitToWidth="true" styleClass="seat-scroll-pane">
+                        <GridPane fx:id="seatGrid" styleClass="seat-grid"/>
+                    </ScrollPane>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Selected Seats:" styleClass="selection-label"/>
+                        <Label fx:id="selectedSeatsLabel" text="None" styleClass="selected-items-label"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Menu Items -->
+                <VBox spacing="10" styleClass="selection-box">
+                    <Label text="Add Concessions:" styleClass="selection-label"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="menuItemsCombo" styleClass="selection-combo" promptText="Select menu item"/>
+                        <Spinner fx:id="quantitySpinner" styleClass="quantity-spinner" min="1" max="10" initialValue="1"/>
+                        <Button text="Add to Order" onAction="#addMenuItem" styleClass="add-button"/>
+                    </HBox>
+                    <VBox fx:id="menuItemsBox" styleClass="selected-items-box"/>
+                </VBox>
+
+                <!-- Price Summary -->
+                <VBox spacing="10" styleClass="price-summary-box">
+                    <Label text="Order Summary" styleClass="summary-title"/>
+                    <HBox spacing="10">
+                        <Label text="Seats:" styleClass="summary-label"/>
+                        <Label fx:id="seatsPriceLabel" text="/$0.00" styleClass="summary-value"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <Label text="Concessions:" styleClass="summary-label"/>
+                        <Label fx:id="menuPriceLabel" text="/$0.00" styleClass="summary-value"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <Label text="Total:" styleClass="summary-total-label"/>
+                        <Label fx:id="totalPriceLabel" text="/$0.00" styleClass="summary-total-value"/>
+                    </HBox>
+                    <Button text="Confirm Booking" onAction="#confirmBooking" styleClass="confirm-button"/>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

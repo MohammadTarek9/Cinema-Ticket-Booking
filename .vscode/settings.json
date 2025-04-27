@@ -1,0 +1,21 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "d:\\Spring25\\Database Systems\\mssql-jdbc-12.10.0.jre8.jar",
+        "d:\\Spring25\\Database Systems\\mssql-jdbc-12.10.0.jre8-javadoc.jar",
+        "d:\\Spring25\\Database Systems\\mssql-jdbc-12.10.0.jre8-sources.jar",
+        "d:\\Spring25\\Database Systems\\mssql-jdbc-12.10.0.jre11.jar",
+        "d:\\Spring25\\Database Systems\\mssql-jdbc-12.10.0.jre11-javadoc.jar",
+        "d:\\Spring25\\Database Systems\\mssql-jdbc-12.10.0.jre11-sources.jar",
+        "c:\\Java\\javafx-sdk-23\\lib\\javafx.base.jar",
+        "c:\\Java\\javafx-sdk-23\\lib\\javafx.controls.jar",
+        "c:\\Java\\javafx-sdk-23\\lib\\javafx.fxml.jar",
+        "c:\\Java\\javafx-sdk-23\\lib\\javafx.graphics.jar",
+        "c:\\Java\\javafx-sdk-23\\lib\\javafx.media.jar",
+        "c:\\Java\\javafx-sdk-23\\lib\\javafx.swing.jar",
+        "c:\\Java\\javafx-sdk-23\\lib\\javafx.web.jar",
+        "c:\\Java\\javafx-sdk-23\\lib\\javafx-swt.jar"
+    ]
+}
