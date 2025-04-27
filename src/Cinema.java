@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -33,6 +34,8 @@ public class Cinema {
         this.city = city;
         this.district = district;
     }
+
+
 
     public Cinema() {
     }
@@ -177,5 +180,29 @@ public class Cinema {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static Cinema getCinemaByID(int cinemaID) {
+        String query = "SELECT * FROM cinema WHERE cinemaID = ?";
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, cinemaID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new Cinema(
+                        rs.getInt("cinemaID"),
+                        rs.getString("cinema_name"),
+                        rs.getString("contact_no"),
+                        rs.getString("opening_hours"),
+                        rs.getString("closing_hours"),
+                        rs.getString("street"),
+                        rs.getString("city"),
+                        rs.getString("district")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

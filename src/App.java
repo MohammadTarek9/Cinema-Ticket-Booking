@@ -10,7 +10,7 @@ import java.util.Objects;
 public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("Cinemas_V.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("Halls_V.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 700);
 
         scene.getStylesheets().add((Objects.requireNonNull(getClass().getResource("dark-theme.css"))).toExternalForm());
