@@ -83,7 +83,7 @@
                         <Label text="Total:" styleClass="summary-total-label"/>
                         <Label fx:id="totalPriceLabel" text="/$0.00" styleClass="summary-total-value"/>
                     </HBox>
-                    <Button text="Confirm Booking" onAction="#confirmBooking" styleClass="confirm-button"/>
+                    <Button text="Proceed to Payment" onAction="#proceedToPayment" styleClass="confirm-button"/>
                 </VBox>
             </VBox>
         </ScrollPane>

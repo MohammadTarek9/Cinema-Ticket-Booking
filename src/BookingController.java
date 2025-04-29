@@ -1,5 +1,4 @@
 
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,9 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+
 import java.io.IOException;
 import java.sql.*;
 import java.sql.Date;
@@ -47,6 +44,7 @@ public class BookingController implements AlertHelper {
     @FXML
     private DatePicker datePicker;
     private Map<LocalDate, List<LocalTime>> showTimesByDate = new HashMap<>();
+    private List<Integer> selectedMenuItemIds = new ArrayList<>();
 
 
     private Movie currentMovie;
@@ -393,6 +391,9 @@ public class BookingController implements AlertHelper {
         int quantity = quantitySpinner.getValue();
         MenuItem item = menuItemsMap.get(selected);
 
+        // Add the item ID to our list
+        selectedMenuItemIds.add(item.getItemID());
+        
         OrderItem orderItem = new OrderItem();
         orderItem.setMenuItem(item);
         orderItem.setQuantity(quantity);
@@ -411,6 +412,8 @@ public class BookingController implements AlertHelper {
         removeBtn.setOnAction(e -> {
             menuItemsBox.getChildren().remove(itemBox);
             orderedItems.remove(orderItem);
+            // Also remove from our IDs list
+            selectedMenuItemIds.remove(Integer.valueOf(item.getItemID()));
             updatePrice();
         });
 
@@ -463,30 +466,33 @@ public class BookingController implements AlertHelper {
                 .sum();
     }
 
-    @FXML
-    private void confirmBooking() {
-        if (currentShowID == -1) {
-            AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Selection Error", "Please select a show time first");
+     @FXML
+    private void proceedToPayment() {
+        if (currentShowID == -1 || selectedSeats.isEmpty()) {
+            AlertHelper.showAlert(Alert.AlertType.ERROR, "Error", "Please select showtime and seats first!");
             return;
         }
 
-        if (selectedSeats.isEmpty()) {
-            AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Selection Error", "Please select at least one seat");
-            return;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Payment.fxml"));
+            Parent root = loader.load();
+
+            PaymentController paymentController = loader.getController();
+            paymentController.setBookingData(
+                currentMovie,
+                currentShowID,
+                new ArrayList<>(selectedSeats),
+                orderedItems,
+                totalPrice,
+                selectedMenuItemIds  // Pass the selected item IDs
+            );
+
+            Stage stage = (Stage) bookingContainer.getScene().getWindow();
+            stage.setMaximized(true);
+            stage.setScene(new Scene(root, 1200, 700));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        // In a real application, you would:
-        // 1. Collect customer information
-        // 2. Create payment record
-        // 3. Create tickets
-        // 4. Add menu items to order
-        // 5. Show confirmation
-
-        AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Booking Confirmation",
-                String.format("Booking confirmed for %s!\nSeats: %s\nTotal: $%.2f",
-                        currentMovie.getTitle(),
-                        String.join(", ", selectedSeats),
-                        totalPrice));
     }
 
     @FXML
@@ -494,14 +500,14 @@ public class BookingController implements AlertHelper {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
             Stage stage = (Stage) bookingContainer.getScene().getWindow();
-            stage.setScene(new Scene(root, 1200, 700));
+            stage.setMaximized(true);
+            stage.setScene(new Scene(root));
         } catch (IOException e) {
             e.printStackTrace();
             AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Error", "Failed to return to home page: " + e.getMessage());
         }
     }
 
-    // Helper methods
     private String formatDuration(int minutes) {
         int hours = minutes / 60;
         int mins = minutes % 60;

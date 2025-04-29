@@ -121,6 +121,9 @@ public class Halls_VController extends CRUD implements AlertHelper {
                                 Hall.deleteHall(hall.getHall_no());
                                 loadHalls();
                             }
+                            else {
+                                AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Cancelled", "Deletion cancelled.");
+                            }
                         });
                     }
 

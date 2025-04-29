@@ -365,3 +365,319 @@
     -fx-background-color: #6a5acd;
     -fx-text-fill: white;
 }
+
+/* Payment Scene Styles */
+.payment-container {
+    -fx-padding: 20px;
+    -fx-max-width: 800px;
+}
+
+.summary-box {
+    -fx-padding: 15px;
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 5px;
+}
+
+.form-box {
+    -fx-padding: 15px;
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 5px;
+    -fx-min-width: 600px;
+}
+
+.form-field {
+    -fx-pref-width: 180px;
+}
+
+.form-combo {
+    -fx-pref-width: 300px;
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-text-fill: #e0e0e0;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10px 0;
+}
+
+.summary-value {
+    -fx-font-size: 14px;
+    -fx-text-fill: #e0e0e0;
+    -fx-wrap-text: true; /* Allows text to wrap */
+}
+
+.summary-box {
+    -fx-padding: 15px;
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #333;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
+}
+
+.summary-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #b0b0b0;
+    -fx-font-weight: bold;
+}
+
+.summary-total-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #7b68ee;
+    -fx-font-weight: bold;
+}
+
+.summary-total-value {
+    -fx-font-size: 16px;
+    -fx-text-fill: #e0e0e0;
+    -fx-font-weight: bold;
+}
+
+.payment-container {
+    -fx-padding: 20px;
+    -fx-background-color: transparent;
+}
+
+.summary-box {
+    -fx-padding: 15px;
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #333;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
+}
+
+.form-box {
+    -fx-padding: 15px;
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 5px;
+    -fx-min-width: 600px;
+}
+
+.form-field {
+    -fx-pref-width: 180px;
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #aaa;
+}
+
+.booking-container {
+    -fx-padding: 20;
+    -fx-background-color: transparent;
+    -fx-spacing: 15;
+}
+
+/* Menu Items Section */
+.menu-scroll-pane {
+    -fx-max-height: 300px;
+    -fx-pref-height: 300px;
+    -fx-background-color: transparent;
+    -fx-padding: 5px;
+}
+
+.menu-items-box {
+    -fx-spacing: 10px;
+    -fx-padding: 5px;
+}
+
+.menu-item-box {
+    -fx-padding: 12px;
+    -fx-spacing: 15px;
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #3a3a3a;
+    -fx-border-width: 1px;
+    -fx-alignment: center-left;
+}
+
+.menu-item-name {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e0e0e0;
+    -fx-wrap-text: true;
+}
+
+.menu-item-price {
+    -fx-font-size: 14px;
+    -fx-text-fill: #b0b0b0;
+}
+
+.menu-item-category {
+    -fx-font-size: 13px;
+    -fx-text-fill: #7b68ee;
+    -fx-font-style: italic;
+}
+
+.add-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-padding: 8px 15px;
+    -fx-cursor: hand;
+}
+
+.add-button:hover {
+    -fx-background-color: #66BB6A;
+}
+
+/* Ordered Items Section */
+.order-scroll-pane {
+    -fx-max-height: 250px;
+    -fx-pref-height: 250px;
+    -fx-background-color: transparent;
+    -fx-padding: 5px;
+}
+
+.ordered-items-box {
+    -fx-spacing: 8px;
+    -fx-padding: 5px;
+}
+
+.ordered-item-box {
+    -fx-padding: 10px;
+    -fx-spacing: 15px;
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #3a3a3a;
+    -fx-border-width: 1px;
+    -fx-alignment: center-left;
+}
+
+.ordered-item-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #e0e0e0;
+    -fx-wrap-text: true;
+    -fx-pref-width: 200px;
+}
+
+.quantity-button {
+    -fx-min-width: 30px;
+    -fx-min-height: 25px;
+    -fx-background-radius: 5px;
+    -fx-background-color: #444;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.quantity-button:hover {
+    -fx-background-color: #555;
+}
+
+.remove-button {
+    -fx-background-color: #F44336;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+
+.remove-button:hover {
+    -fx-background-color: #EF5350;
+}
+
+/* Quantity Controls Container */
+.quantity-controls {
+    -fx-spacing: 8px;
+    -fx-alignment: center-right;
+}
+
+/* Section Titles */
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #7b68ee;
+    -fx-padding: 0 0 10px 0;
+}
+
+/* Price Summary Enhancements */
+.price-summary-box {
+    -fx-background-color: #242424;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #333;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
+    -fx-padding: 20px;
+    -fx-spacing: 12px;
+}
+
+.summary-total-value {
+    -fx-font-size: 18px;
+    -fx-text-fill: #FFC107; /* Gold color for total */
+}
+
+/* Seat Grid Improvements */
+.seat-grid {
+    -fx-background-color: #1a1a1a;
+    -fx-padding: 15px;
+    -fx-hgap: 8px;
+    -fx-vgap: 8px;
+}
+
+.seat-button {
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-background-radius: 5px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+/* Responsive adjustments */
+@media (max-width: 800px) {
+    .menu-item-box, .ordered-item-box {
+        -fx-padding: 8px;
+        -fx-spacing: 10px;
+    }
+    
+    .seat-button {
+        -fx-min-width: 35px;
+        -fx-min-height: 35px;
+    }
+}
+
+/* Payment Scene Specific Styles */
+.payment-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-fit-to-width: true;
+}
+
+.payment-content-box {
+    -fx-padding: 30px;
+    -fx-spacing: 25px;
+    -fx-alignment: center;
+    -fx-max-width: 850px;
+}
+
+/* Form Field Sizing */
+.form-field {
+    -fx-pref-width: 250px;
+}
+
+/* Center Align GridPane Content */
+.grid-pane {
+    -fx-alignment: center;
+}
+
+/* Summary Box Width Control */
+.summary-box {
+    -fx-min-width: 600px;
+    -fx-max-width: 800px;
+}
+
+/* Form Box Width Control */
+.form-box {
+    -fx-min-width: 600px;
+    -fx-max-width: 800px;
+}
+
+/* Payment Method Combo Width */
+.form-combo {
+    -fx-pref-width: 300px;
+}
