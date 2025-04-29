@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.asu.controllers.Shows_VController">
+    <top>
+        <HBox alignment="CENTER" prefHeight="59.0" prefWidth="600.0" spacing="60.0" BorderPane.alignment="CENTER">
+            <children>
+                <Hyperlink fx:id="ReturnLink" alignment="CENTER" text="Return"/>
+                <Hyperlink fx:id="ViewLink" alignment="CENTER" text="View All Tab"/>
+                <Hyperlink fx:id="CreateLink" alignment="CENTER" text="Create Tab"/>
+            </children>
+            <padding>
+                <Insets left="10.0" right="10.0"/>
+            </padding>
+        </HBox>
+    </top>
+    <center>
+        <AnchorPane fx:id="Pane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
+    </center>
+</BorderPane>
