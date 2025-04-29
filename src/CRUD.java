@@ -38,7 +38,7 @@ public abstract class CRUD {
             Stage stage = (Stage) ReturnLink.getScene().getWindow();
             Scene scene = new Scene(root, 1200, 700);
 
-            scene.getStylesheets().add(getClass().getResource("/styles/dark-theme.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("dark-theme-admin.css").toExternalForm());
             
             // Set the new scene on the stage
             stage.setScene(scene);

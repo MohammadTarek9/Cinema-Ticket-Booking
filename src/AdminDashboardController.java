@@ -127,7 +127,9 @@ public class AdminDashboardController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
             Stage stage = (Stage) cinemaCountText.getScene().getWindow();
-            stage.setScene(new Scene(root, 1200, 700));
+            Scene scene = new Scene(root, 1200, 700);
+            scene.getStylesheets().add(getClass().getResource("dark-theme-admin.css").toExternalForm());
+            stage.setScene(scene);
             stage.setTitle(title);
 
         } catch (IOException e) {

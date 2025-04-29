@@ -34,7 +34,7 @@ public class BookingController {
     @FXML private Label totalPriceLabel;
     @FXML private DatePicker datePicker;
     private Map<LocalDate, List<LocalTime>> showTimesByDate = new HashMap<>();
-
+    private List<Integer> selectedMenuItemIds = new ArrayList<>();
 
 
     private Movie currentMovie;
@@ -173,6 +173,8 @@ public class BookingController {
         int quantity = quantitySpinner.getValue();
         MenuItem item = menuItemsMap.get(selected);
 
+        selectedMenuItemIds.add(item.getItemID());
+
         OrderItem orderItem = new OrderItem();
         orderItem.setMenuItem(item);
         orderItem.setQuantity(quantity);
@@ -191,6 +193,7 @@ public class BookingController {
         removeBtn.setOnAction(e -> {
             menuItemsBox.getChildren().remove(itemBox);
             orderedItems.remove(orderItem);
+            selectedMenuItemIds.remove(Integer.valueOf(item.getItemID()));
             updatePrice();
         });
 
@@ -454,6 +457,38 @@ public class BookingController {
 
         return 0.0;
     }
+
+    @FXML
+    private void proceedToPayment() {
+        if (currentShowID == -1 || selectedSeats.isEmpty()) {
+            AlertHelper.showAlert(Alert.AlertType.ERROR, "Error", "Please select showtime and seats first!");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Payment.fxml"));
+            Parent root = loader.load();
+
+            PaymentController paymentController = loader.getController();
+            paymentController.setBookingData(
+                currentMovie,
+                currentShowID,
+                new ArrayList<>(selectedSeats),
+                orderedItems,
+                totalPrice,
+                selectedMenuItemIds  // Pass the selected item IDs
+            );
+
+            Stage stage = (Stage) bookingContainer.getScene().getWindow();
+            stage.setMaximized(true);
+            stage.setScene(new Scene(root, 1200, 700));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    
 
 
 /**************************** End of SQL functions *****************************************************/

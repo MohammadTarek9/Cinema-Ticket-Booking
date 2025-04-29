@@ -1,10 +1,12 @@
 import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -350,137 +352,136 @@ private boolean isCardExpired(String mmYY) {
         return true;
     }
 
-    private String insertCustomer(Connection conn) throws SQLException {
-        String phoneNum = phoneField.getText();
-        
-        // First check if customer exists
-        String checkSql = "SELECT phoneNum from customer WHERE phoneNum = ?";
-        
-        try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
-            checkStmt.setString(1, phoneNum);
-            ResultSet rs = checkStmt.executeQuery();
-            
+    private String insertCustomer(Connection conn) {
+    String phoneNum = phoneField.getText();
+    String sql = "{call sp_InsertCustomer(?, ?, ?, ?, ?, ?)}";
+
+    try (CallableStatement stmt = conn.prepareCall(sql)) {
+        stmt.setString(1, phoneNum);
+        stmt.setString(2, firstNameField.getText());
+        stmt.setString(3, middleInitialField.getText());
+        stmt.setString(4, lastNameField.getText());
+        stmt.setInt(5, Integer.parseInt(ageField.getText()));
+        stmt.setString(6, emailField.getText());
+
+        try (ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
-                // Customer exists - return existing phone number
-                System.out.println("Customer already exists: " + phoneNum);
-                return rs.getString("phoneNum");
+                String returnedPhone = rs.getString("phoneNum");
+                System.out.println("Customer processed: " + returnedPhone);
+                return returnedPhone;
+            } else {
+                throw new SQLException("No phone number returned by stored procedure.");
             }
         }
-        
-        // Customer doesn't exist - insert new one
-        String insertSql = "INSERT INTO customer (phoneNum, Fname, Minit, Lname, age, email) " +
-                         "VALUES (?, ?, ?, ?, ?, ?)";
-        
-        try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-            pstmt.setString(1, phoneNum);
-            pstmt.setString(2, firstNameField.getText());
-            pstmt.setString(3, middleInitialField.getText());
-            pstmt.setString(4, lastNameField.getText());
-            pstmt.setInt(5, Integer.parseInt(ageField.getText()));
-            pstmt.setString(6, emailField.getText());
 
-            System.out.println("Inserting new customer: " + phoneNum);
-            
-            pstmt.executeUpdate();
-        }
-
-        catch(SQLException e) {
-            e.printStackTrace();
-            AlertHelper.showAlert(Alert.AlertType.ERROR, 
-                "Database Error", "Could not insert customer: " + e.getMessage());
-        }
-        System.out.println("Customer inserted: " + phoneNum);
-        return phoneNum;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        AlertHelper.showAlert(Alert.AlertType.ERROR, 
+            "Database Error", "Could not insert or retrieve customer: " + e.getMessage());
+        return null;
     }
+}
 
-    private int insertPayment(Connection conn, String customerPhone) throws SQLException {
-    String sql = "INSERT INTO payment (payment_cost, method, status, customer_phone_no, payment_date) " +
-                 "VALUES (?, ?, 'completed', ?, ?)";
-    
+
+private int insertPayment(Connection conn, String customerPhone) throws SQLException {
+    String sql = "{CALL sp_InsertPayment(?, ?, ?, ?)}"; 
+
     try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-        pstmt.setDouble(1, totalPrice);
-        pstmt.setString(2, paymentMethodCombo.getValue());
+        pstmt.setDouble(1, totalPrice); 
+        pstmt.setString(2, paymentMethodCombo.getValue()); 
         pstmt.setString(3, customerPhone);
         pstmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
-        
-        pstmt.executeUpdate();
-        
-        ResultSet rs = pstmt.getGeneratedKeys();
-        if (rs.next()) return rs.getInt(1);
-    }
-    return -1;
-}
-private int getHallNumber(Connection conn, int showID) throws SQLException {
-    String sql = "SELECT hall_no FROM show WHERE showID = ?";
-    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        pstmt.setInt(1, showID);
-        ResultSet rs = pstmt.executeQuery();
-        if (rs.next()) {
-            return rs.getInt("hall_no");
-        } else {
-            throw new SQLException("Show not found with ID: " + showID);
+
+        int rowsAffected = pstmt.executeUpdate();
+
+        if (rowsAffected == 0) {
+            throw new SQLException("Inserting payment failed, no rows affected.");
+        }
+
+        try (ResultSet rs = pstmt.getGeneratedKeys()) {
+            if (rs.next()) {
+                return rs.getInt(1); 
+            } else {
+                throw new SQLException("Inserting payment failed, no ID obtained.");
+            }
         }
     }
 }
 
+
+private int getHallNumber(Connection conn, int showID) throws SQLException {
+    String sql = "{call sp_GetHallNumberByShowID(?, ?)}";
+
+    try (CallableStatement stmt = conn.prepareCall(sql)) {
+        stmt.setInt(1, showID);
+        stmt.registerOutParameter(2, Types.INTEGER);
+
+        stmt.execute();
+
+        int hallNumber = stmt.getInt(2);
+        System.out.println("Hall number: " + hallNumber);
+        return hallNumber;
+    }
+}
+
+
 private void createTickets(Connection conn, int paymentID, int showID, int hallNo) throws SQLException {
-    String sql = "INSERT INTO ticket (showID, hall_no, seat_no, booking_status, paymentID) " +
-                 "VALUES (?, ?, ?, 'CONFIRMED', ?)";
-    
-    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    String sql = "{call sp_CreateTicket(?, ?, ?, ?)}";
+
+    try (CallableStatement stmt = conn.prepareCall(sql)) {
         for (String seat : selectedSeats) {
             int seatNo = Integer.parseInt(seat.substring(seat.indexOf("S") + 1));
             System.out.println("Inserting ticket for seat: " + seatNo);
-            pstmt.setInt(1, showID);
-            pstmt.setInt(2, hallNo);
-            pstmt.setInt(3, seatNo);
-            pstmt.setInt(4, paymentID);
-            pstmt.addBatch();
+
+            stmt.setInt(1, showID);
+            stmt.setInt(2, hallNo);
+            stmt.setInt(3, seatNo);
+            stmt.setInt(4, paymentID);
+
+            stmt.execute();
         }
-        pstmt.executeBatch();
     }
 }
+
 
 private void updateSeatStatus(Connection conn, int hallNo, List<String> selectedSeats) throws SQLException {
-    String sql = "UPDATE seat SET seat_status = 1 WHERE hall_no = ? AND seat_no = ?";
-    
-    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    String sql = "{call sp_UpdateSeatStatus(?, ?)}";
+
+    try (CallableStatement stmt = conn.prepareCall(sql)) {
         for (String seat : selectedSeats) {
             int seatNo = Integer.parseInt(seat.substring(seat.indexOf("S") + 1));
-            pstmt.setInt(1, hallNo);
-            pstmt.setInt(2, seatNo);
-            pstmt.addBatch();
+
+            stmt.setInt(1, hallNo);
+            stmt.setInt(2, seatNo);
+
+            stmt.execute();
         }
-        pstmt.executeBatch();
     }
 }
 
-    private void addOrderItems(Connection conn, int paymentID, List<Integer> itemIds) throws SQLException {
-        String sql = "INSERT INTO purchased_with (paymentID, itemID) VALUES (?, ?)";
-        
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            // Create a copy of the list to track remaining items
-            List<Integer> remainingItems = new ArrayList<>(itemIds);
-            
-            while (!remainingItems.isEmpty()) {
-                // Get and remove the first item
-                Integer itemId = remainingItems.remove(0);
-                
-                try {
-                    pstmt.setInt(1, paymentID);
-                    pstmt.setInt(2, itemId);
-                    pstmt.executeUpdate();
-                    
-                    // Successfully inserted - remove from original list if needed
-                    itemIds.remove(itemId);
-                    
-                } catch (SQLException e) {
-                    System.err.println("Failed to insert item " + itemId + ": " + e.getMessage());
-                    // Continue with next item
-                }
+
+private void addOrderItems(Connection conn, int paymentID, List<Integer> itemIds) throws SQLException {
+    String sql = "{call sp_AddOrderItem(?, ?)}";
+
+    try (CallableStatement stmt = conn.prepareCall(sql)) {
+        List<Integer> remainingItems = new ArrayList<>(itemIds);
+
+        while (!remainingItems.isEmpty()) {
+            Integer itemId = remainingItems.remove(0);
+            try {
+                stmt.setInt(1, paymentID);
+                stmt.setInt(2, itemId);
+                stmt.execute();
+
+                itemIds.remove(itemId); // optional if itemIds needs to reflect only uninserted
+
+            } catch (SQLException e) {
+                System.err.println("Failed to insert item " + itemId + ": " + e.getMessage());
             }
         }
     }
+}
+
 
     private void showConfirmation() {
         AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Success", 

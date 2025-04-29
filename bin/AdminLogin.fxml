@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import java.net.URL?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="AdminLoginController">
+    <stylesheets>
+        <URL value="@dark-theme-admin.css" />
+    </stylesheets>
+
+    <center>
+        <VBox styleClass="form-container" alignment="CENTER" spacing="20">
+            <padding>
+                <Insets top="40" left="40" right="40" bottom="40"/>
+            </padding>
+
+            <Text text="Admin Access" styleClass="form-title"/>
+
+            <VBox styleClass="form-field-group" spacing="15" alignment="CENTER">
+                <Label text="Enter Admin Code:" styleClass="form-label"/>
+                <PasswordField fx:id="codeField" styleClass="form-input" promptText="Enter code here"/>
+
+                <Label fx:id="errorLabel" styleClass="error-label" visible="false"/>
+
+                <Button fx:id="loginButton" text="Login" styleClass="form-button submit-button"
+                        onAction="#handleLogin" defaultButton="true"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

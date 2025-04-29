@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<?import java.net.URL?>
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AdminDashboardController">
+    <stylesheets>
+        <URL value="@dark-theme-admin.css" />
+    </stylesheets>
+
+    <top>
+        <VBox styleClass="header-box">
+            <HBox alignment="CENTER" spacing="20" styleClass="header-content">
+                <ImageView fitHeight="50" fitWidth="50">
+                    <image>
+                        <Image url="@logo.png" />
+                    </image>
+                </ImageView>
+                <Text text="Cinema Booking System - Admin Dashboard" styleClass="title-text"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Back to Home" onAction="#goBackToHome" styleClass="back-button"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+            <VBox fx:id="dashboardContainer" spacing="20" styleClass="dashboard-container">
+                <!-- Stats Cards -->
+                <HBox spacing="20" styleClass="stats-container">
+                    <!-- Cinema Stats -->
+                    <VBox styleClass="stats-card">
+                        <Text text="Cinemas" styleClass="stats-title"/>
+                        <Text fx:id="cinemaCountText" text="Loading..." styleClass="stats-value"/>
+                    </VBox>
+
+                    <!-- Halls Stats -->
+                    <VBox styleClass="stats-card">
+                        <Text text="Halls" styleClass="stats-title"/>
+                        <Text fx:id="hallCountText" text="Loading..." styleClass="stats-value"/>
+                    </VBox>
+
+                    <!-- Movies Stats -->
+                    <VBox styleClass="stats-card">
+                        <Text text="Now Showing" styleClass="stats-title"/>
+                        <Text fx:id="nowShowingCountText" text="Loading..." styleClass="stats-value"/>
+                    </VBox>
+
+                    <!-- Tickets Stats -->
+                    <VBox styleClass="stats-card">
+                        <Text text="Tickets Sold" styleClass="stats-title"/>
+                        <Text fx:id="ticketsSoldText" text="Loading..." styleClass="stats-value"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Management Buttons -->
+                <GridPane styleClass="management-grid" hgap="20" vgap="20">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints percentHeight="50"/>
+                        <RowConstraints percentHeight="50"/>
+                    </rowConstraints>
+
+                    <!-- Cinema Management -->
+                    <Button text="Cinema Management" onAction="#openCinemaManagement" styleClass="management-button" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+
+                    <!-- Hall Management -->
+                    <Button text="Hall Management" onAction="#openHallManagement" styleClass="management-button" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                    <!-- Movies Management -->
+                    <Button text="Movies Management" onAction="#openMoviesManagement" styleClass="management-button" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                    <!-- Screen Management -->
+                    <Button text="Screen Management" onAction="#openScreenManagement" styleClass="management-button" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                </GridPane>
+
+                <!-- Recent Activity -->
+                <VBox styleClass="activity-box">
+                    <Text text="Recent Activity" styleClass="section-title"/>
+                    <TableView fx:id="activityTable" styleClass="activity-table">
+                        <columns>
+                            <TableColumn fx:id="actionColumn" text="Action" styleClass="table-column"/>
+                            <TableColumn fx:id="detailsColumn" text="Details" styleClass="table-column"/>
+                            <TableColumn fx:id="timestampColumn" text="Timestamp" styleClass="table-column"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>
