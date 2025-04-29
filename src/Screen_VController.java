@@ -1,3 +1,5 @@
+//package org.example;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,13 +26,14 @@ public class Screen_VController extends CRUD implements AlertHelper{
         setupHyperlinkActions("Screen");
     }
 
+    //sql
     private void loadScreens() {
         ObservableList<Screen> allScreens = FXCollections.observableArrayList();
-        String query = "SELECT * FROM screen";
+        String sql = "{ call GetAllScreens() }";
 
         try (Connection conn = DatabaseConnector.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             CallableStatement cstmt = conn.prepareCall(sql);
+             ResultSet rs = cstmt.executeQuery()) {
 
             while (rs.next()) {
                 Screen screen = createScreenFromResultSet(rs);

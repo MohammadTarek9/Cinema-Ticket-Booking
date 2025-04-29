@@ -1,3 +1,4 @@
+//package org.example;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -69,7 +70,7 @@ public class Screen_EController extends CRUD implements AlertHelper {
         }
         if (AlertHelper.showConfirm("Confirm Submission", "Add new screen to database?")) {
             Screen screen = new Screen(screenType, price, resolution);
-            if (screen.addScreen()) {
+            if (screen.updateScreen(screenType)) {
                 AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Success", "Screen Updated Successfully!");
                 ViewLink.fire(); // Navigate to View All page
             } else {

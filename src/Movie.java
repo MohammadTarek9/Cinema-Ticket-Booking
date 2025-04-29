@@ -1,5 +1,5 @@
 
-
+//package org.example;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,6 +45,11 @@ public class Movie {
 
     public Movie() {
 
+    }
+
+
+    public void setMovieID(int movieID) {
+        this.movieID = movieID;
     }
 
     // Getters and Setters
@@ -158,8 +163,9 @@ public class Movie {
         this.genres = genres;
     }
 
+    //sql
     public boolean addMovie() {
-        String sql = "INSERT INTO movie VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "{CALL AddMovie(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}"; // Calling AddMovie stored procedure
 
         try (PreparedStatement pstmt = DatabaseConnector.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, title);
@@ -175,8 +181,9 @@ public class Movie {
             pstmt.setString(11, leadActor);
             pstmt.setString(12, director);
 
-            int rowsAffected = pstmt.executeUpdate();
+
             setLastMovieID(pstmt);
+            int rowsAffected = pstmt.executeUpdate();
             addCategory();
             // Return true if at least one row was deleted
             return rowsAffected > 0;
@@ -187,8 +194,9 @@ public class Movie {
         }
     }
 
+    //sql
     public void addCategory() {
-        String sql = "INSERT INTO genre VALUES (?, ?)";
+        String sql = "{CALL AddCategory(?,?)}";
         try (PreparedStatement pstmt = DatabaseConnector.getConnection().prepareStatement(sql)) {
             for (String genre : genres) {
                 pstmt.setString(1, genre);
@@ -200,6 +208,7 @@ public class Movie {
         }
     }
 
+    //sql
     private boolean setLastMovieID(PreparedStatement stmt) {
         try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
             if (generatedKeys.next()) {
@@ -213,9 +222,10 @@ public class Movie {
         }
     }
 
+    //sql
     public boolean updateMovie(int movieID) {
         this.movieID = movieID;
-        String sql = "UPDATE movie SET " + "title = ?, " + "description = ?, " + "main_language = ?, " + "duration = ?, " + "movie_day = ?, " + "movie_month = ?, " + "movie_year = ?, " + "now_showing = ?, " + "censorship = ?, " + "rating = ?, " + "lead_actor = ?, " + "director = ? " + "WHERE movieID = ?";
+        String sql ="{CALL UpdateMovie(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}"; // Calling UpdateMovie stored procedure
 
         try (PreparedStatement pstmt = DatabaseConnector.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, title);
@@ -244,8 +254,9 @@ public class Movie {
         }
     }
 
+    //sql
     public void dropCategory() {
-        String sql = "DELETE FROM genre WHERE movieID = ?";
+        String sql = "{CALL DropCategory(?)}";
         try (PreparedStatement pstmt = DatabaseConnector.getConnection().prepareStatement(sql)) {
             pstmt.setInt(1, movieID);
             pstmt.executeUpdate();
@@ -254,8 +265,9 @@ public class Movie {
         }
     }
 
+    //sql
     public static boolean deleteMovie(int movieID) {
-        String sql = "DELETE FROM movie WHERE movieID = ?";
+        String sql = "{CALL DeleteMovie(?)}";
 
         try (PreparedStatement pstmt = DatabaseConnector.getConnection().prepareStatement(sql)) {
             pstmt.setInt(1, movieID);

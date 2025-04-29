@@ -1,4 +1,4 @@
-package org.asu.controllers;
+//package org.asu.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,8 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
-import org.asu.DatabaseConnector;
-import org.asu.Show;
+//import org.asu.DatabaseConnector;
+//import org.asu.Show;
 
 import java.io.IOException;
 import java.sql.*;

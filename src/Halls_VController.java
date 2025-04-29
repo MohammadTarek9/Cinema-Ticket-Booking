@@ -1,8 +1,6 @@
-import java.sql.Statement;
+//package org.example;
+import java.sql.*;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,13 +27,14 @@ public class Halls_VController extends CRUD implements AlertHelper {
         setupHyperlinkActions("Halls");
     }
 
+    //sql
     private void loadHalls() {
         ObservableList<Hall> allHalls = FXCollections.observableArrayList();
-        String query = "SELECT * FROM hall";
+        String sql = "{ call GetAllHalls() }";
 
         try (Connection conn = DatabaseConnector.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             CallableStatement cstmt = conn.prepareCall(sql);
+             ResultSet rs = cstmt.executeQuery()) {
 
             while (rs.next()) {
                 Hall hall = createHallFromResultSet(rs);
@@ -118,8 +117,14 @@ public class Halls_VController extends CRUD implements AlertHelper {
                         deleteBtn.setOnAction(event -> {
                             Hall hall = getTableView().getItems().get(getIndex());
                             if (AlertHelper.showConfirm("Alert!", "Delete Hall No " + hall.getHall_no() + "?")) {
-                                Hall.deleteHall(hall.getHall_no());
-                                loadHalls();
+                                String res = Hall.deleteHall(hall.getHall_no());
+                                if(res.equals("Success")){
+                                    AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Success", "Hall Deleted.");
+                                    loadHalls();
+                                } else {
+                                    AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Failed", res);
+                                }
+
                             }
                             else {
                                 AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Cancelled", "Deletion cancelled.");

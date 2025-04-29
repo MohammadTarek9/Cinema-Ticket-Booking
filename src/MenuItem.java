@@ -1,4 +1,4 @@
-
+//package org.example;
 
 public class MenuItem {
     private int itemID;

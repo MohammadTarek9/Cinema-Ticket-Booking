@@ -1,4 +1,4 @@
-
+//package org.example;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,18 +28,20 @@ public class Movies_VController extends CRUD implements AlertHelper{
         setupHyperlinkActions("Movies");
     }
 
+    //sql
     private void loadMovies() {
         ObservableList<Movie> allMovies = FXCollections.observableArrayList();
-        String query = "SELECT * FROM movie";
+        String sql = "{call sp_GetAllMoviesWithGenres()}";
 
         try (Connection conn = DatabaseConnector.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             CallableStatement stmt = conn.prepareCall(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Movie movie = createMovieFromResultSet(rs);
                 allMovies.add(movie);
             }
+
 
             setupMovieTable(allMovies);
 
@@ -186,15 +188,16 @@ public class Movies_VController extends CRUD implements AlertHelper{
         movieTable.setItems(allMovies);
     }
 
+    //sql
     private Set<String> getGenresForMovie(int movieID) throws SQLException {
         Set<String> genres = new HashSet<>();
-        String query = "SELECT movie_genre FROM genre WHERE movieID = ?";
+        String sql = "{ call GetGenresForMovie(?) }";
 
         try (Connection conn = DatabaseConnector.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             CallableStatement cstmt = conn.prepareCall(sql)) {
 
-            pstmt.setInt(1, movieID);
-            ResultSet rs = pstmt.executeQuery();
+            cstmt.setInt(1, movieID);
+            ResultSet rs = cstmt.executeQuery();
 
             while (rs.next()) {
                 genres.add(rs.getString("movie_genre"));
@@ -202,4 +205,5 @@ public class Movies_VController extends CRUD implements AlertHelper{
         }
         return genres;
     }
+
 }

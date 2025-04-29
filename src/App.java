@@ -1,4 +1,3 @@
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,7 +9,7 @@ import java.util.Objects;
 public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("Homepage.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("HomePage.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 700);
 
         scene.getStylesheets().add((Objects.requireNonNull(getClass().getResource("dark-theme.css"))).toExternalForm());

@@ -1,3 +1,5 @@
+//package org.example;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -36,9 +38,10 @@ public class Screen {
         this.resolution = resolution;
     }
 
+    //sql
     public boolean addScreen() {
-        String query = "INSERT INTO screens (screen_type, price, resolution) VALUES (?, ?, ?)";
-        try (PreparedStatement preparedStatement = DatabaseConnector.getConnection().prepareStatement(query)) {
+        String sql = "{CALL AddScreen(?, ?, ?)}"; // Calling AddScreen stored procedure
+        try (PreparedStatement preparedStatement = DatabaseConnector.getConnection().prepareStatement(sql)) {
             preparedStatement.setString(1, screenType);
             preparedStatement.setDouble(2, price);
             preparedStatement.setString(3, resolution);
@@ -49,8 +52,9 @@ public class Screen {
         }
     }
 
+    //sql
     public static boolean deleteScreen(String screenType) {
-        String query = "DELETE FROM screens WHERE screen_type = ?";
+        String query = "{CALL DeleteScreen(?)}"; // Calling DeleteScreen stored procedure
         try (PreparedStatement preparedStatement = DatabaseConnector.getConnection().prepareStatement(query)) {
             preparedStatement.setString(1, screenType);
             return preparedStatement.executeUpdate() > 0;
@@ -60,8 +64,9 @@ public class Screen {
         }
     }
 
+    //sql
     public boolean updateScreen(String screenType) {
-        String query = "UPDATE screens SET price = ?, resolution = ? WHERE screen_type = ?";
+        String query =  "{CALL UpdateScreen(?, ?, ?)}"; // Calling UpdateScreen stored procedure
         try (PreparedStatement preparedStatement = DatabaseConnector.getConnection().prepareStatement(query)) {
             preparedStatement.setDouble(1, price);
             preparedStatement.setString(2, resolution);

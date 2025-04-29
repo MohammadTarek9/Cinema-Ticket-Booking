@@ -1,3 +1,5 @@
+//package org.example;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -69,9 +71,10 @@ public class Hall {
         this.cinema = cinema;
     }
 
+    //sql
     public boolean addHall() {
-    String sql = "INSERT INTO hall (sound_sys, screen_type, no_of_seats, cinemaID) VALUES (?, ?, ?, ?)";
-    try (PreparedStatement pstmt = DatabaseConnector.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    String sql = "{CALL AddHall(?, ?, ?, ?)}";
+    try (PreparedStatement pstmt = DatabaseConnector.getConnection().prepareStatement(sql)) {
         pstmt.setString(1, sound_sys);
         pstmt.setString(2, screen_type);
         pstmt.setInt(3, no_of_seats);
@@ -80,11 +83,7 @@ public class Hall {
         int rowsAffected = pstmt.executeUpdate();
 
         if (rowsAffected > 0) {
-        try (var generatedKeys = pstmt.getGeneratedKeys()) {
-            if (generatedKeys.next()) {
-            this.hall_no = generatedKeys.getInt(1);
-            }
-        }
+            System.out.println("new hall added successfully");
         }
 
         return rowsAffected > 0;
@@ -95,20 +94,24 @@ public class Hall {
     }
     }
 
-    public static void deleteHall(int hall_no) {
-        String query = "DELETE FROM hall WHERE hall_no = ?";
+    //sql
+    public static String deleteHall(int hall_no) {
+        String query = "{CALL DeleteHall(?)}";
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, hall_no);
             pstmt.executeUpdate();
             System.out.println("Hall with ID " + hall_no + " deleted successfully.");
+            return "Success";
         } catch (SQLException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
+            return "Couldn't Delete Hall, It has valid tickets.";
         }
     }
 
+    //sql
     public boolean updateHall(int hall_no){
-        String query = "UPDATE hall SET sound_sys = ?, screen_type = ?, no_of_seats = ?, cinemaID = ? WHERE hall_no = ?";
+        String query = "{CALL UpdateHall(?, ?, ?, ?, ?)}";
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, sound_sys);

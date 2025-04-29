@@ -1,3 +1,5 @@
+//package org.example;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,8 +36,6 @@ public class Cinema {
         this.city = city;
         this.district = district;
     }
-
-
 
     public Cinema() {
     }
@@ -118,10 +118,11 @@ public class Cinema {
                 '}';
     }
 
+    //sql
     public boolean addCinema() {
-        String sql = "INSERT INTO cinema (cinema_name, contact_no, opening_hours, closing_hours, street, city, district) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "{CALL AddCinema(?, ?, ?, ?, ?, ?, ?)}"; // Calling AddCinema stored procedure
 
-        try (PreparedStatement pstmt = DatabaseConnector.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pstmt = DatabaseConnector.getConnection().prepareStatement(sql)) {
             pstmt.setString(1, cinemaName);
             pstmt.setString(2, contact_no);
             pstmt.setString(3, opening_hours);
@@ -133,11 +134,7 @@ public class Cinema {
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
-                try (var generatedKeys = pstmt.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        this.cinemaID = generatedKeys.getInt(1);
-                    }
-                }
+                System.out.println("new cinema added successfully");
             }
 
             return rowsAffected > 0;
@@ -148,8 +145,10 @@ public class Cinema {
         }
     }
 
+    //sql
     public static void deleteCinema(int cinemaID) {
-        String query = "DELETE FROM cinema WHERE cinemaID = ?";
+        String query = "{CALL DeleteCinema(?)}"; // Calling DeleteCinema stored procedure
+
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, cinemaID);
@@ -161,8 +160,9 @@ public class Cinema {
         }
     }
 
+    //sql
     public boolean updateCinema(int cinemaID) {
-        String query = "UPDATE cinema SET cinema_name = ?, contact_no = ?, opening_hours = ?, closing_hours = ?, street = ?, city = ?, district = ? WHERE cinemaID = ?";
+        String query = "{CALL UpdateCinema(?, ?, ?, ?, ?, ?, ?,?)}";;
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, cinemaName);
@@ -182,8 +182,9 @@ public class Cinema {
         }
     }
 
+    //sql
     public static Cinema getCinemaByID(int cinemaID) {
-        String query = "SELECT * FROM cinema WHERE cinemaID = ?";
+        String query = "{CALL GetCinemaByID(?)}";
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, cinemaID);

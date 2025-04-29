@@ -1,8 +1,7 @@
-import java.sql.Statement;
+//package org.example;
+
+import java.sql.*;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,11 +30,11 @@ public class Cinemas_VController extends CRUD implements AlertHelper {
 
     private void loadCinemas() {
         ObservableList<Cinema> allCinemas = FXCollections.observableArrayList();
-        String query = "SELECT * FROM cinema";
+        String sql = "{ call GetAllCinemas() }";
 
         try (Connection conn = DatabaseConnector.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             CallableStatement cstmt = conn.prepareCall(sql);
+             ResultSet rs = cstmt.executeQuery()) {
 
             while (rs.next()) {
                 Cinema cinema = createCinemaFromResultSet(rs);

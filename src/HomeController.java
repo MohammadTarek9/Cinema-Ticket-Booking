@@ -1,5 +1,8 @@
+//package org.example;
 
-
+import javafx.beans.property.ObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,41 +21,35 @@ import java.util.Set;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.sql.PreparedStatement;
 
-public class HomeController implements AlertHelper {
-    @FXML
-    private TextField searchField;
-    @FXML
-    private ComboBox<String> genreFilter;
-    @FXML
-    private ComboBox<String> durationFilter;
-    @FXML
-    private ComboBox<String> timeFilter;
-    @FXML
-    private ComboBox<String> directorFilter;
-    @FXML
-    private VBox moviesContainer;
+public class HomeController {
+    @FXML private TextField searchField;
+    @FXML private ComboBox<String> genreFilter;
+    @FXML private ComboBox<String> durationFilter;
+    @FXML private ComboBox<String> timeFilter;
+    @FXML private ComboBox<String> directorFilter;
+    @FXML private VBox moviesContainer;
 
     private List<Movie> allMovies;
     private List<Movie> nowShowingMovies;
-    private Map<Integer, List<LocalTime>> movieShowTimes = new HashMap<>();
+    private Map<Integer, List<LocalTime>> movieShowTimes = new HashMap<>();;
 
     @FXML
     public void initialize() {
         loadMovies();
-        loadShowTimes();
         setupFilters();
     }
 
+/******************************** Start of SQl functions *************************************************/
     private void loadMovies() {
         allMovies = new ArrayList<>();
         nowShowingMovies = new ArrayList<>();
-        String query = "SELECT * FROM movie";
+
+        String sql = "{call sp_GetAllMoviesWithGenres()}";
 
         try (Connection conn = DatabaseConnector.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             CallableStatement stmt = conn.prepareCall(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Movie movie = createMovieFromResultSet(rs);
@@ -62,38 +60,45 @@ public class HomeController implements AlertHelper {
                 }
             }
 
+            // Load show times for now showing movies
+            loadShowTimesForNowShowing();
+
             displayMovies(nowShowingMovies);
 
         } catch (SQLException e) {
             e.printStackTrace();
-            AlertHelper.showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to load movies: " + e.getMessage());
+            showAlert("Database Error", "Failed to load movies: " + e.getMessage());
         }
     }
 
-    private void loadShowTimes() {
+    private void loadShowTimesForNowShowing() {
         movieShowTimes = new HashMap<>();
-        String query = "SELECT s.movieID, s.show_time FROM show s JOIN movie m ON s.movieID = m.movieID WHERE m.now_showing = 1";
 
-        try (Connection conn = DatabaseConnector.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        for (Movie movie : nowShowingMovies) {
+            String sql = "{call sp_GetMovieShowTimes(?)}";
 
-            while (rs.next()) {
-                int movieID = rs.getInt("movieID");
-                Time showTime = rs.getTime("show_time");
-                LocalTime time = showTime.toLocalTime();
+            try (Connection conn = DatabaseConnector.getConnection();
+                 CallableStatement stmt = conn.prepareCall(sql)) {
 
-                movieShowTimes.computeIfAbsent(movieID, k -> new ArrayList<>()).add(time);
+                stmt.setInt(1, movie.getMovieID());
+                ResultSet rs = stmt.executeQuery();
+
+                List<LocalTime> times = new ArrayList<>();
+                while (rs.next()) {
+                    times.add(rs.getTime("show_time").toLocalTime());
+                }
+
+                movieShowTimes.put(movie.getMovieID(), times);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
     private Movie createMovieFromResultSet(ResultSet rs) throws SQLException {
         Movie movie = new Movie();
-        movie.setLastMovieID(rs.getInt("movieID"));
+        movie.setMovieID(rs.getInt("movieID"));
         movie.setTitle(rs.getString("title"));
         movie.setDescription(rs.getString("description"));
         movie.setMainLanguage(rs.getString("main_language"));
@@ -140,16 +145,35 @@ public class HomeController implements AlertHelper {
         directorFilter.setPromptText("Filter by Director");
 
         // Genre filter
-        Set<String> allGenres = new HashSet<>();
-        try (Connection conn = DatabaseConnector.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT DISTINCT movie_genre FROM genre")) {
+        try {
+            String sql = "{call sp_GetAllGenres()}";
+            try (Connection conn = DatabaseConnector.getConnection();
+                 CallableStatement stmt = conn.prepareCall(sql);
+                 ResultSet rs = stmt.executeQuery()) {
 
-            while (rs.next()) {
-                allGenres.add(rs.getString("movie_genre"));
+                ObservableList<String> genres = FXCollections.observableArrayList();
+                while (rs.next()) {
+                    genres.add(rs.getString("movie_genre"));
+                }
+                genreFilter.setItems(genres);
             }
-            genreFilter.getItems().addAll(allGenres);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        // Director filter
+        try {
+            String sql = "{call sp_GetAllDirectors()}";
+            try (Connection conn = DatabaseConnector.getConnection();
+                 CallableStatement stmt = conn.prepareCall(sql);
+                 ResultSet rs = stmt.executeQuery()) {
+
+                ObservableList<String> directors = FXCollections.observableArrayList();
+                while (rs.next()) {
+                    directors.add(rs.getString("director"));
+                }
+                directorFilter.setItems(directors);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -168,21 +192,6 @@ public class HomeController implements AlertHelper {
                 "Evening (5PM-10PM)",
                 "Night (After 10PM)"
         );
-
-        // Director filter
-        Set<String> directors = new HashSet<>();
-        try (Connection conn = DatabaseConnector.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT DISTINCT director FROM movie")) {
-
-            while (rs.next()) {
-                directors.add(rs.getString("director"));
-            }
-            directorFilter.getItems().addAll(directors);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
         // Add listeners to filters
         genreFilter.valueProperty().addListener((obs, oldVal, newVal) -> filterMovies());
@@ -249,25 +258,38 @@ public class HomeController implements AlertHelper {
 
     @FXML
     private void handleSearch() {
-        String searchTerm = searchField.getText().toLowerCase();
+        String searchTerm = searchField.getText().trim();
         if (searchTerm.isEmpty()) {
             clearFilters();
             return;
         }
 
-        List<Movie> filtered = new ArrayList<>();
-        for (Movie movie : allMovies) {
-            if (movie.getTitle().toLowerCase().contains(searchTerm) ||
-                    movie.getDescription().toLowerCase().contains(searchTerm) ||
-                    movie.getLeadActor().toLowerCase().contains(searchTerm) ||
-                    movie.getDirector().toLowerCase().contains(searchTerm)) {
+        String sql = "{call sp_SearchMovies(?)}";
+
+        try (Connection conn = DatabaseConnector.getConnection();
+             CallableStatement stmt = conn.prepareCall(sql)) {
+
+            stmt.setString(1, searchTerm);
+            ResultSet rs = stmt.executeQuery();
+
+            List<Movie> filtered = new ArrayList<>();
+            while (rs.next()) {
+                Movie movie = createMovieFromResultSet(rs);
                 filtered.add(movie);
             }
-        }
 
-        displayMovies(filtered, true); // true indicates search mode
+            displayMovies(filtered, true);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("Database Error", "Failed to search movies: " + e.getMessage());
+        }
     }
 
+/******************************** End of SQl functions *************************************************/
+
+
+/******************************** GUI functions ********************************************************/
     @FXML
     private void clearFilters() {
         searchField.clear();
@@ -422,7 +444,34 @@ public class HomeController implements AlertHelper {
 
         } catch (IOException e) {
             e.printStackTrace();
-            AlertHelper.showAlert(Alert.AlertType.ERROR, "Error", "Failed to load booking page: " + e.getMessage());
+            showAlert("Error", "Failed to load booking page: " + e.getMessage());
         }
     }
+    @FXML
+    private void openLoginPage(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminLogin.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) moviesContainer.getScene().getWindow();
+            stage.setScene(new Scene(root, 1200, 700));
+            stage.setTitle("Admin Login");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load admin page: " + e.getMessage());
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
+/******************************** End of GUI functions *************************************************/
+
 }
