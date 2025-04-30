@@ -1,4 +1,4 @@
-USE CinemaBookingSystem
+USE Cinema
 GO
 
 -- 1. Get Cinema Count

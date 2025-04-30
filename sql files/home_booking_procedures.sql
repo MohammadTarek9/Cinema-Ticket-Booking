@@ -1,4 +1,4 @@
-USE CinemaBookingSystem
+USE Cinema
 GO
 
 -- 1. Procedure to get all movies with their genres

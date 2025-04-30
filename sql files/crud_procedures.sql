@@ -1,4 +1,4 @@
-USE CinemaBookingSystem
+USE Cinema
 GO
 
 --getter queries
