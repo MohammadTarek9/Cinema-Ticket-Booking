@@ -23,7 +23,7 @@ END
 GO
 
 CREATE OR ALTER PROCEDURE sp_InsertPayment
-    @payment_cost DECIMAL(10, 2),
+    @payment_cost DECIMAL(5, 2),
     @method VARCHAR(50),
     @customer_phone_no VARCHAR(20),
     @payment_date DATETIME
