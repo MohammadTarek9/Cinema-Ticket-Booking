@@ -22,12 +22,11 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE sp_InsertPayment
-    @payment_cost FLOAT,
+CREATE OR ALTER PROCEDURE InsertPayment
+    @payment_cost DECIMAL(10, 2),
     @method VARCHAR(50),
     @customer_phone_no VARCHAR(20),
-    @payment_date DATETIME,
-    @payment_id INT OUTPUT
+    @payment_date DATETIME
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -35,9 +34,10 @@ BEGIN
     INSERT INTO payment (payment_cost, method, status, customer_phone_no, payment_date)
     VALUES (@payment_cost, @method, 'completed', @customer_phone_no, @payment_date);
 
-    SET @payment_id = SCOPE_IDENTITY();
-END
+    SELECT CAST(SCOPE_IDENTITY() AS INT) AS paymentID;
+END;
 GO
+
 
 CREATE OR ALTER PROCEDURE sp_GetHallNumberByShowID
     @showID INT,
