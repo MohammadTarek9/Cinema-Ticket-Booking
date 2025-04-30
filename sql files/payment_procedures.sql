@@ -22,7 +22,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE InsertPayment
+CREATE OR ALTER PROCEDURE sp_InsertPayment
     @payment_cost DECIMAL(10, 2),
     @method VARCHAR(50),
     @customer_phone_no VARCHAR(20),
