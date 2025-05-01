@@ -1,5 +1,4 @@
-USE Cinema
-GO
+
 
 --getter queries
 -- 1 --

@@ -1,3 +1,5 @@
+
+
 CREATE OR ALTER PROCEDURE sp_InsertCustomer
     @phoneNum VARCHAR(20),
     @Fname VARCHAR(50),
@@ -26,7 +28,8 @@ CREATE OR ALTER PROCEDURE sp_InsertPayment
     @payment_cost DECIMAL(5, 2),
     @method VARCHAR(50),
     @customer_phone_no VARCHAR(20),
-    @payment_date DATETIME
+    @payment_date DATETIME,
+    @paymentID INT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -34,10 +37,9 @@ BEGIN
     INSERT INTO payment (payment_cost, method, status, customer_phone_no, payment_date)
     VALUES (@payment_cost, @method, 'completed', @customer_phone_no, @payment_date);
 
-    SELECT CAST(SCOPE_IDENTITY() AS INT) AS paymentID;
+    SET @paymentID = SCOPE_IDENTITY();
 END;
 GO
-
 
 CREATE OR ALTER PROCEDURE sp_GetHallNumberByShowID
     @showID INT,

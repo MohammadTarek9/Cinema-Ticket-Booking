@@ -60,8 +60,8 @@
                 <!-- Management Buttons -->
                 <GridPane styleClass="management-grid" hgap="20" vgap="20">
                     <columnConstraints>
-                        <ColumnConstraints percentWidth="50"/>
-                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="30"/>
+                        <ColumnConstraints percentWidth="30"/>
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints percentHeight="50"/>
@@ -79,6 +79,9 @@
 
                     <!-- Screen Management -->
                     <Button text="Screen Management" onAction="#openScreenManagement" styleClass="management-button" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                    <!-- Reports Management -->
+                    <Button text="Reports" onAction="#openReportsPage" styleClass="management-button" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 
                 </GridPane>
 

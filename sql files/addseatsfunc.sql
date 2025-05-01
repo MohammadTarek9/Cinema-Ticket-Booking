@@ -1,4 +1,4 @@
-create or alter procedure test
+create or alter procedure add_seats
 	@hallID int
 as
 declare	@seatNO int;

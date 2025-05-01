@@ -1,5 +1,4 @@
-USE Cinema
-GO
+
 
 -- 1. Get Cinema Count
 CREATE OR ALTER PROCEDURE sp_GetCinemaCount

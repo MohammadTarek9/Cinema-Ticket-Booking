@@ -1,4 +1,4 @@
-//package org.example;
+//package org.example
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -120,6 +120,12 @@ public class AdminDashboardController {
     @FXML
     private void openMoviesManagement() {
         loadManagementScreen("Movies_V.fxml", "Movies Management");
+    }
+
+
+    @FXML
+    private void openReportsPage() {
+        loadManagementScreen("ReportsPage.fxml", "Reports");
     }
 
     private void loadManagementScreen(String fxmlFile, String title) {

@@ -19,7 +19,7 @@
                     <image>
                     </image>
                 </ImageView>
-                <Text text="CineBook - Booking" styleClass="title-text"/>
+                <Text text="Cinema Booking - Booking" styleClass="title-text"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Button text="Back to Movies" onAction="#goBackToHome" styleClass="back-button"/>
             </HBox>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.net.URL?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ReportsController">
+    <stylesheets>
+        <URL value="@dark-theme.css" />
+    </stylesheets>
+
+    <top>
+        <VBox styleClass="header-box">
+            <HBox alignment="CENTER" styleClass="header-content" spacing="60">
+                <Hyperlink fx:id="returnLink"  onAction="#handleReturnLink" text="Return" styleClass="nav-link"/>
+                <Text text="Reports Dashboard" styleClass="title-text"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox styleClass="form-container" spacing="20">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <ComboBox fx:id="reportTypeCombo" styleClass="form-input" promptText="Select Report Type">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Monthly Ticket Sales"/>
+                            <String fx:value="Movie Performance"/>
+                            <String fx:value="Cinema Performance"/>
+                            <String fx:value="Menu Item Sales"/>
+                            <String fx:value="Popular Menu Items"/>
+                            <String fx:value="Movie Comparisons"/>
+                            <String fx:value="Revenue by Screen Type"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+
+                <ComboBox fx:id="monthCombo" styleClass="form-input" promptText="Select Month" visible="false">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="January"/>
+                            <String fx:value="February"/>
+                            <String fx:value="March"/>
+                            <String fx:value="April"/>
+                            <String fx:value="May"/>
+                            <String fx:value="June"/>
+                            <String fx:value="July"/>
+                            <String fx:value="August"/>
+                            <String fx:value="September"/>
+                            <String fx:value="October"/>
+                            <String fx:value="November"/>
+                            <String fx:value="December"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+
+                <ComboBox fx:id="yearCombo" styleClass="form-input" promptText="Select Year" visible="false"/>
+
+                <ComboBox fx:id="movieCombo" styleClass="form-input" promptText="Select Movie" visible="false"/>
+
+                <ComboBox fx:id="cinemaCombo" styleClass="form-input" promptText="Select Cinema" visible="false"/>
+
+                <Button fx:id="generateReportBtn" text="Generate Report" styleClass="form-button submit-button" minWidth="120" maxWidth="120"/>
+            </HBox>
+
+            <ScrollPane styleClass="scroll-pane">
+                <VBox fx:id="reportContainer" spacing="20" styleClass="report-container">
+                    <!-- Dynamic report content will be inserted here -->
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>

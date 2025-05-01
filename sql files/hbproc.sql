@@ -1,5 +1,4 @@
-USE Cinema
-GO
+
 
 -- 1. Procedure to get all movies with their genres
 CREATE OR ALTER PROCEDURE sp_GetAllMoviesWithGenres
@@ -52,15 +51,18 @@ BEGIN
         h.no_of_seats,
         sc.screen_type,
         sc.price,
-        sc.resolution
+        sc.resolution,
+		c.cinema_name
     FROM show s
     JOIN hall h ON s.hall_no = h.hall_no
     JOIN screen sc ON h.screen_type = sc.screen_type
+	JOIN cinema c ON h.cinemaid = c.cinemaid
     WHERE s.movieID = @movieID
     AND s.show_date >= CAST(GETDATE() AS DATE)
     ORDER BY s.show_date, s.show_time;
 END
 GO
+
 
 -- 4. Function to check seat availability
 CREATE OR ALTER FUNCTION fn_IsSeatAvailable

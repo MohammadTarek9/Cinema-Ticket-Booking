@@ -33,7 +33,7 @@ public class BookingController {
     @FXML private Label menuPriceLabel;
     @FXML private Label totalPriceLabel;
     @FXML private DatePicker datePicker;
-    private Map<LocalDate, List<LocalTime>> showTimesByDate = new HashMap<>();
+    private Map<LocalDate, List<ShowTimeInfo>> showTimesByDate = new HashMap<>();
     private List<Integer> selectedMenuItemIds = new ArrayList<>();
 
 
@@ -83,10 +83,10 @@ public class BookingController {
         showTimeCombo.getItems().clear();
         showTimeCombo.setDisable(false);
 
-        List<LocalTime> times = showTimesByDate.get(date);
-        if (times != null) {
-            for (LocalTime time : times) {
-                showTimeCombo.getItems().add(time.format(DateTimeFormatter.ofPattern("h:mm a")));
+        List<ShowTimeInfo> showTimes = showTimesByDate.get(date);
+        if (showTimes != null) {
+            for (ShowTimeInfo showTime : showTimes) {
+                showTimeCombo.getItems().add(showTime.toString());
             }
         }
     }
@@ -288,38 +288,45 @@ public class BookingController {
 /******************************** End of GUI functions *************************************************/
 
 /**************************** Start of SQL functions ***************************************************/
-    private void loadAvailableDates() {
-        String sql = "{call sp_GetMovieShowTimes(?)}";
+private void loadAvailableDates() {
+    String sql = "{call sp_GetMovieShowTimes(?)}";
+    showTimesByDate.clear();
 
-        try (Connection conn = DatabaseConnector.getConnection();
-             CallableStatement stmt = conn.prepareCall(sql)) {
+    try (Connection conn = DatabaseConnector.getConnection();
+         CallableStatement stmt = conn.prepareCall(sql)) {
 
-            stmt.setInt(1, currentMovie.getMovieID());
-            ResultSet rs = stmt.executeQuery();
+        stmt.setInt(1, currentMovie.getMovieID());
+        ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
-                LocalDate date = rs.getDate("show_date").toLocalDate();
-                if (!showTimesByDate.containsKey(date)) {
-                    showTimesByDate.put(date, new ArrayList<>());
-                }
-                showTimesByDate.get(date).add(rs.getTime("show_time").toLocalTime());
+        while (rs.next()) {
+            LocalDate date = rs.getDate("show_date").toLocalDate();
+            LocalTime time = rs.getTime("show_time").toLocalTime();
+
+            if (!showTimesByDate.containsKey(date)) {
+                showTimesByDate.put(date, new ArrayList<>());
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert("Database Error", "Failed to load available dates");
+            showTimesByDate.get(date).add(new ShowTimeInfo(date, time));
         }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        showAlert("Database Error", "Failed to load available dates");
     }
+}
 
     // Updated loadSeatMap method
     private void loadSeatMap(LocalDate date, String timeDisplay) {
+        // Extract time and cinema name from the display string
+        String[] parts = timeDisplay.split(" - ");
+        LocalTime time = LocalTime.parse(parts[0], DateTimeFormatter.ofPattern("h:mm a"));
+
         seatGrid.getChildren().clear();
         selectedSeats.clear();
         selectedSeatsLabel.setText("None");
         updatePrice();
 
         try {
-            LocalTime time = LocalTime.parse(timeDisplay, DateTimeFormatter.ofPattern("h:mm a"));
+            //LocalTime time = LocalTime.parse(timeDisplay, DateTimeFormatter.ofPattern("h:mm a"));
             LocalDateTime showDateTime = LocalDateTime.of(date, time);
 
             String sql = "{ call GetShowAndHallForMovie(?, ?, ?) }";
@@ -480,7 +487,6 @@ public class BookingController {
             );
 
             Stage stage = (Stage) bookingContainer.getScene().getWindow();
-            stage.setMaximized(true);
             stage.setScene(new Scene(root, 1200, 700));
         } catch (IOException e) {
             e.printStackTrace();

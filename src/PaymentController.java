@@ -384,27 +384,25 @@ private boolean isCardExpired(String mmYY) {
 
 
 private int insertPayment(Connection conn, String customerPhone) throws SQLException {
-    String sql = "{CALL sp_InsertPayment(?, ?, ?, ?)}"; 
+    String sql = "{CALL sp_InsertPayment(?, ?, ?, ?, ?)}"; 
 
-    try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-        pstmt.setDouble(1, totalPrice); 
-        pstmt.setString(2, paymentMethodCombo.getValue()); 
-        pstmt.setString(3, customerPhone);
-        pstmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+    try (CallableStatement stmt = conn.prepareCall(sql)) {
+        stmt.setDouble(1, totalPrice); 
+        stmt.setString(2, paymentMethodCombo.getValue()); 
+        stmt.setString(3, customerPhone);
+        stmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+        stmt.registerOutParameter(5, Types.INTEGER); 
 
-        int rowsAffected = pstmt.executeUpdate();
+        stmt.execute(); 
 
-        if (rowsAffected == 0) {
-            throw new SQLException("Inserting payment failed, no rows affected.");
-        }
-
-        try (ResultSet rs = pstmt.getGeneratedKeys()) {
-            if (rs.next()) {
-                return rs.getInt(1); 
-            } else {
-                throw new SQLException("Inserting payment failed, no ID obtained.");
-            }
-        }
+        int paymentID = stmt.getInt(5);
+        System.out.println("Inserted payment ID: " + paymentID);
+        return paymentID;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        AlertHelper.showAlert(Alert.AlertType.ERROR, 
+            "Database Error", "Could not insert payment: " + e.getMessage());
+        return -1;
     }
 }
 
