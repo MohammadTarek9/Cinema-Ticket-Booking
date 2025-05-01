@@ -301,11 +301,12 @@ private void loadAvailableDates() {
         while (rs.next()) {
             LocalDate date = rs.getDate("show_date").toLocalDate();
             LocalTime time = rs.getTime("show_time").toLocalTime();
+            String cinemaName = rs.getString("cinema_name");
 
             if (!showTimesByDate.containsKey(date)) {
                 showTimesByDate.put(date, new ArrayList<>());
             }
-            showTimesByDate.get(date).add(new ShowTimeInfo(date, time));
+            showTimesByDate.get(date).add(new ShowTimeInfo(date, time, cinemaName));
         }
 
     } catch (SQLException e) {

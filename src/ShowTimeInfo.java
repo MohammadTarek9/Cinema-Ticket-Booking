@@ -7,18 +7,18 @@ import java.time.format.DateTimeFormatter;
 public class ShowTimeInfo {
     private LocalDate date;
     private LocalTime time;
-    //private String cinemaName;
+    private String cinemaName;
 
     // Constructor, getters, and setters
-    public ShowTimeInfo(LocalDate date, LocalTime time) {
+    public ShowTimeInfo(LocalDate date, LocalTime time, String cinemaName) {
         this.date = date;
         this.time = time;
-       // this.cinemaName = cinemaName;
+        this.cinemaName = cinemaName;
     }
 
     // Getters and setters...
     @Override
     public String toString() {
-        return String.format("%s",time.format(DateTimeFormatter.ofPattern("h:mm a")));
+        return String.format("%s - %s", time.format(DateTimeFormatter.ofPattern("h:mm a")), cinemaName);
     }
 }
