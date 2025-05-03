@@ -89,6 +89,8 @@ public class Halls_EController extends CRUD implements AlertHelper {
                 return;
             }
             if (updatedHall.updateHall(hall.getHall_no())) {
+                hall.deleteAllSeats(hall.getHall_no());
+                hall.addSeats(hall.getHall_no());
                 AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Success", "Hall Updated Successfully!");
                 ViewLink.fire();
             } else {

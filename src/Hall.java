@@ -1,8 +1,10 @@
 //package org.example;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.sql.PreparedStatement;
 
 public class Hall {
@@ -73,23 +75,22 @@ public class Hall {
 
     //sql
     public boolean addHall() {
-    String sql = "{CALL AddHall(?, ?, ?, ?)}";
-    try (PreparedStatement pstmt = DatabaseConnector.getConnection().prepareStatement(sql)) {
+    int hall_no;
+    String sql = "{CALL AddHall(?, ?, ?, ?,?)}";
+    try (CallableStatement pstmt = DatabaseConnector.getConnection().prepareCall(sql)) {
         pstmt.setString(1, sound_sys);
         pstmt.setString(2, screen_type);
         pstmt.setInt(3, no_of_seats);
         pstmt.setInt(4, cinema.getCinemaID());
+        pstmt.registerOutParameter(5, Types.INTEGER); 
 
-        int rowsAffected = pstmt.executeUpdate();
-
-        if (rowsAffected > 0) {
-            System.out.println("new hall added successfully");
-        }
-
-        return rowsAffected > 0;
-
+        pstmt.execute();
+        hall_no = pstmt.getInt(5); // Get the generated hall number
+        this.hall_no = hall_no; // Set the hall number in the object
+        System.out.println("Hall added successfully with hall number: " + hall_no);
+        return true;
     } catch (SQLException e) {
-        System.err.println("Error Adding hall: " + e.getMessage());
+        e.printStackTrace();
         return false;
     }
     }
@@ -120,6 +121,7 @@ public class Hall {
             pstmt.setInt(4, cinema.getCinemaID());
             pstmt.setInt(5, hall_no);
             int rowsAffected = pstmt.executeUpdate();
+            this.hall_no = hall_no; 
             return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -127,5 +129,28 @@ public class Hall {
         }
     }
 
+    public boolean addSeats(int hall_no){
+        String query = "{CALL add_seats(?)}";
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, hall_no);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
+    public void deleteAllSeats(int hall_no){
+        String query = "DELETE FROM seat WHERE hall_no = ?";
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, hall_no);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+    }
 }

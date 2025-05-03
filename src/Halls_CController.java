@@ -71,8 +71,13 @@ public class Halls_CController extends CRUD implements AlertHelper {
         if (AlertHelper.showConfirm("Confirm Submission", "Add new hall to database?")) {
             Hall hall = new Hall(soundSystem, screenType, Integer.parseInt(numOfSeats), Cinema.getCinemaByID(Integer.parseInt(cinemaID)));
             if (hall.addHall()) {
-                AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Success", "Hall Added Successfully!");
-                ViewLink.fire();
+                System.out.println("hall number: " + hall.getHall_no());
+                if(hall.addSeats(hall.getHall_no())){
+                    AlertHelper.showAlert(Alert.AlertType.INFORMATION, "Success", "Hall added successfully!");
+                    clearFields(event);
+                } else {
+                    AlertHelper.showAlert(Alert.AlertType.ERROR, "Error", "Failed to add seats!");
+                }
             } else {
                 AlertHelper.showAlert(Alert.AlertType.ERROR, "Error", "Failed to add hall!");
             }

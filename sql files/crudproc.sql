@@ -245,11 +245,13 @@ CREATE OR ALTER PROCEDURE AddHall
     @sound_sys NVARCHAR(50),
     @screen_type NVARCHAR(50),
     @no_of_seats INT,
-    @cinemaID INT
+    @cinemaID INT,
+    @hall_no INT OUTPUT
 AS
 BEGIN
     INSERT INTO hall (sound_sys, screen_type, no_of_seats, cinemaID)
     VALUES (@sound_sys, @screen_type, @no_of_seats, @cinemaID);
+    SET @hall_no = SCOPE_IDENTITY();
 END;
 GO
 
